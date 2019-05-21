@@ -1,0 +1,16 @@
+---
+- name: Remove Legacy Services Which is not Used in the Production System
+  package:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - telnet-server
+    - telnet
+    - rsh-server
+    - rsh
+    - ypserv
+    - tftp
+    - talk-server
+    - xorg-x11-server-commo
+    - dhcp
+    - net-snmp

@@ -1,0 +1,5 @@
+---
+aws_region: eu-east-1
+vpc_id: 12345
+aws_secret_key: AKIAIOSFODNN7EXAMPLE
+aws_access_key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY

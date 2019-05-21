@@ -1,0 +1,29 @@
+---
+- name: Load the variables
+  include_vars: '{{ ansible_os_family }}.yml'
+
+- name: SSHD Hardening update the /etc/ssh/sshd_config
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^{{ item.name }} " line="{{ item.name }} {{ item.value }}"
+  with_items:
+    - { name: 'Protocol',                value: '2'          }
+    - { name: 'Ciphers', value: 'aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc' }
+    - { name: 'MACs',    value: 'hmac-sha2-512,hmac-sha2-256,hmac-sha1' }
+    - { name: 'X11Forwarding',           value: 'no'         }
+    - { name: 'MaxAuthTries',            value: '4'          }
+    - { name: 'IgnoreRhosts',            value: 'yes'        }
+    - { name: 'StrictModes',             value: 'yes'        }
+    - { name: 'UsePrivilegeSeparation',  value: 'yes'        }
+    - { name: 'PermitEmptyPasswords',    value: 'no'         }
+    - { name: 'PermitRootLogin',         value: 'no'         }
+    - { name: 'HostbasedAuthentication', value: 'no'         }
+    - { name: 'Compression',             value: 'delayed'    }
+    - { name: 'GSSAPIAuthentication',    value: 'no'         }
+    - { name: 'KerberosAuthentication',  value: 'no'         }
+    - { name: 'PermitUserEnvironment',   value: 'no'         }
+    - { name: 'ClientAliveCountMax',     value: '0'          }
+    - { name: 'Banner',                  value: '/etc/issue' }
+    - { name: 'ClientAliveInterval',     value: '900'        }
+
+   
+-  name: restart sshd 
+   service: name='{{ sshd }}' state=restarted

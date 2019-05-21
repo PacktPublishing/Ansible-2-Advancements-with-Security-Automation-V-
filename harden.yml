@@ -1,0 +1,10 @@
+# To Run this Playbook Issue the command
+# ansible-playbook harden.yml
+#goo.gl/KjzHSK
+
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  roles:
+    - { role: oshardening }

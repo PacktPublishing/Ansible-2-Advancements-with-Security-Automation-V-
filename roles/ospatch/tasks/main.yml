@@ -1,0 +1,35 @@
+---
+#Update kernel Package
+- name: Upgrade Kernel Package
+  yum: name=kernel state=latest
+  async: 1000
+  poll: 0
+  register: yum_update
+  when: ansible_os_family == 'RedHat'
+
+- name: 'YUM - check on fire and forget task'
+  async_status: jid={{ yum_update.ansible_job_id }}
+  register: job_result
+  until: job_result.finished
+  retries: 100
+
+#If you install the yum-utils package, you can use a command called needs-restarting
+# needs-restarting -r returns 0 if reboot is not needed, and 1 if it is, so it is perfect to use in a script.
+
+- name: yum-util Package Installation
+  yum: name=yum-utils state=latest
+  when: ansible_os_family == 'RedHat'
+
+- name: check if reboot required after kernel update.
+  shell: NEED_RESTARTING=$(needs-restarting -r); if [[ $NEED_RESTARTING != 0 ]]; then echo “reboot_needed”; else echo “reboot_not_needed”; fi
+  ignore_errors: true
+  register: reboot_required
+  when: ansible_os_family == 'RedHat'
+
+- name: restart system
+  command: shutdown -r +1 “Rebooting System After Patching”
+  async: 0
+  poll: 0
+  register: reboot_started
+  ignore_errors: true
+  when: ansible_os_family == 'RedHat' and reboot_required.stdout == 'reboot_needed'

@@ -1,0 +1,23 @@
+- name: Production Ec2 Web Server Group
+  ec2_group:
+    name: Production Ec2 WebServer Group
+    description: Production Web Server Security Group
+    vpc_id: vpc-7a129e1f
+    region: us-east-1
+
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 10.0.0.0/8
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
+      - proto: icmp
+        from_port: 8 # icmp type, -1 = any type
+        to_port:  -1 # icmp subtype, -1 = any subtype
+        cidr_ip: 10.0.0.0/8
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0

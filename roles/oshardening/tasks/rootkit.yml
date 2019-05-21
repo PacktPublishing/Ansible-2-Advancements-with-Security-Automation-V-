@@ -1,0 +1,45 @@
+---
+- name: Debian Family install the rkHunter,CheckrootKit, Clamv Antivirus
+  package:
+    name: "{{ item }}"
+    state: latest
+    force: yes
+  with_items:
+    - clamav
+    - rkhunter
+    - chkrootkit
+    - clamav-daemon
+    - at
+  when: ansible_os_family == 'Debian'
+
+- name: El6/7 install the rkHunter,CheckrootKit, Clamv Antivirus
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - epel-release
+    - clamav
+    - rkhunter
+    - at
+  when: ansible_os_family == 'RedHat'
+
+# Run and Verify the Results
+- name: Run Clamscan Fire and Forgot
+  command: clamscan -i /tmp
+  async: 45
+  poll: 0
+  register: clamscan
+
+- name: CLAMV  fire and Display Results
+  async_status: jid={{ clamscan.ansible_job_id }}
+  register: job_result
+  until: job_result.finished
+  retries: 30
+- debug: var=job_result.stdout_lines
+
+# Schedule the CLam Scan and Send EMails
+- name: Run Clamv Once in a Week
+  at:
+    command: "clamscan -i /tmp | mail anish@packtpub.com"
+    count: 1
+    units: weeks

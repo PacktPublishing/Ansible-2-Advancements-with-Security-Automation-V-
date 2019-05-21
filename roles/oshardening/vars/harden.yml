@@ -1,0 +1,47 @@
+---
+harden:
+
+    #Disable IP Forwarding
+  - name: net.ipv4.ip_forward
+    value: 0
+
+    #Disable Packet Redirect
+  - name: net.ipv4.conf.all.send_redirects
+    value: 0
+
+  - name: net.ipv4.conf.default.send_redirects
+    value: 0
+
+    #Disable Source packet as Router
+  - name: net.ipv4.conf.default.send_redirects
+    value: 0
+
+  - name: net.ipv4.conf.default.send_redirects
+    value: 0
+
+  - name: net.ipv4.conf.all.accept_source_route
+    value: 0
+
+  - name: net.ipv4.conf.default.accept_source_route
+    value: 0
+
+    #Log Packets
+  - name: net.ipv4.conf.all.log_martians
+    value: 1
+
+  - name: net.ipv4.conf.default.log_martians
+    value: 1
+
+  - name: net.ipv4.route.flush
+    value: 1
+
+    #Disable ICMP Redirect
+  - name: net.ipv4.conf.all.accept_redirects
+    value: 0
+
+  - name: net.ipv4.conf.default.accept_redirects
+    value: 0
+
+   #Enable SYN Cookies
+  - name: net.ipv4.tcp_syncookies
+    value: 1

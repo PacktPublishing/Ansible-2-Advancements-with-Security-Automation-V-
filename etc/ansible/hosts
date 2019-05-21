@@ -1,0 +1,13 @@
+# Host file Confuguration
+[host:children]
+controller
+db
+web
+[controller]
+ansible-controller
+[db]
+ansible-ubuntu-1604-db
+[web]
+ansible-redhat6-web
+ansible-centos7-web
+[host:vars]

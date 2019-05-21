@@ -1,0 +1,11 @@
+# To Run this Playbook Issue the command
+#Author Anish Nath
+# ansible-playbook ec2.yml
+#goo.gl/7iZqkv
+
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  roles:
+    - { role: ec2 }

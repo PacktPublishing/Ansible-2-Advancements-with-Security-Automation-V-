@@ -1,0 +1,42 @@
+#Restrict Core Dumps
+---
+- name: create limits.d directory if it does not exist
+  file:
+    path: '/etc/security/limits.d'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+    state: 'directory'
+
+- name: create limits.conf
+  template:
+    src: 'limits.conf'
+    dest: '/etc/security/limits.d/hardcore.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0440'
+
+
+- name: Configure System Ctrl to Restrict  Core Dumps
+  sysctl:
+    name: fs.suid_dumpable
+    value: 0
+    state: present
+
+# protection against buffer overflow attacks.
+#Ubuntu has NX protection enabled by default
+- name: ExecShield Configuration
+  sysctl:
+    name: kernel.exec-shield
+    value: 1
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+
+# Randamozed Virtual Memory Placement
+#Ubuntu has NX protection enabled by default
+- name: Randamozed Virtual Memory Placement
+  sysctl:
+    name: kernel.randomize_va_space
+    value: 2
+    state: present
